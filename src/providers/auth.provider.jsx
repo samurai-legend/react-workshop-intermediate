@@ -6,6 +6,7 @@ const initialState = { session: null, user: null };
 
 const AuthProvider = ({ children }) => {
   const [state, setState] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(true);
 
   const setSession = async () => {
     const { data } = await supabase.auth.getSession();
@@ -14,6 +15,8 @@ const AuthProvider = ({ children }) => {
       // Why we spread the data here?
       setState({ ...{ session: data.session, user: data.session.user } });
     }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -33,10 +36,15 @@ const AuthProvider = ({ children }) => {
         default:
           setState({ ...{ session: session, user: session.user } });
       }
+      setIsLoading(false);
     });
   }, []);
 
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={state}>
+      {!isLoading && children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;

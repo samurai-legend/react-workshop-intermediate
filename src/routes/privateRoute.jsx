@@ -7,7 +7,6 @@ import { Navigate } from "react-router-dom";
 const PrivateRoute = ({ children, redirectPath }) => {
   const { session } = useAuth();
 
-  console.log(session);
   if (!session) {
     return <Navigate to={redirectPath ? redirectPath : ROUTES.LOGIN} replace />;
   }
